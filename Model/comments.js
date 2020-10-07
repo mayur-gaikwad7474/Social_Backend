@@ -3,12 +3,12 @@ const schema = mongoose.Schema
 
 const comments = new schema({
     postId: String,
-    comments: [{
+    comments: {
+        userId: String,
         name: String,
-        body: String,
+        comment: String,
         date: { type: Date, default: Date.now },
-        path: String
-    }],
+    },
 })
 
 module.exports = mongoose.model("Comments", comments)

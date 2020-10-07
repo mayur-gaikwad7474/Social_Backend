@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Post = require('../Model/post')
 const User = require('../Model/user')
+const Comment = require('../Model/comments')
 const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
 const path = require('path')
@@ -51,7 +52,10 @@ router.post('/like/:postid/:userid', async (req, res) => {
             })
         }
     } catch (error) {
-        console.log(error)
+        res.status(500).json({
+            error: "Something went wrong",
+            message: 'incomplete'
+        })
     }
 })
 
@@ -74,7 +78,43 @@ router.post('/dislike/:postid/:userid', async (req, res) => {
             })
         }
     } catch (error) {
-        console.log(error)
+        res.status(500).json({
+            error: "Something went wrong",
+            message: 'incomplete'
+        })
+    }
+})
+
+router.post('/comment/:postid/:userid', async (req, res) => {
+    try {
+        const userData = await User.findById(req.params.userid)
+        let commentObject = {
+            postId: req.params.postid,
+            comments: {
+                userId: userData._id,
+                name: userData.userName,
+                comment: req.body.comment,
+            }
+        }
+        const commentData = await Comment.create(commentObject)
+        res.send(commentData)
+    } catch (error) {
+        res.status(500).json({
+            error: "Something went wrong",
+            message: 'incomplete'
+        })
+    }
+})
+
+router.get('/comments/:postid', async (req, res) => {
+    try {
+        const commentData = await Comment.find({ postId: req.params.postid })
+        res.send(commentData)
+    } catch (error) {
+        res.status(500).json({
+            error: "Something went wrong",
+            message: 'incomplete'
+        })
     }
 })
 
@@ -82,7 +122,7 @@ router.post('/dislike/:postid/:userid', async (req, res) => {
 //Route GET social/post/all
 router.get('/all', async (req, res) => {
     try {
-        let data = await Post.find({}).sort({timestamp: -1})
+        let data = await Post.find({}).sort({ timestamp: -1 })
         res.send(data)
     } catch (error) {
         res.status(500).json({
