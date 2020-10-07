@@ -15,7 +15,7 @@ app.use('/social/post', require('./Router/post'))
 try {
     //'mongodb+srv://Roshan:3BrOr8xsdbwOlqGw@cluster0.hetj0.mongodb.net/Social?retryWrites=true&w=majority'
     //mongodb://localhost:27017/social
-    mongoose.connect("mongodb://localhost:27017/social",
+    mongoose.connect("mongodb+srv://Roshan:3BrOr8xsdbwOlqGw@cluster0.hetj0.mongodb.net/Social?retryWrites=true&w=majority",
         { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 } catch (error) {
     console.log(error)
