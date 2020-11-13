@@ -120,9 +120,14 @@ router.get('/comments/:postid', async (req, res) => {
 
 
 //Route GET social/post/all
-router.get('/all', async (req, res) => {
+router.get('/all/:page', async (req, res) => {
     try {
-        let data = await Post.find({}).sort({ timestamp: -1 })
+        const limit = 5
+        const skip = req.params.page || 1 * limit
+        let data = await Post.find({})
+            .sort({ timestamp: -1 })
+            .skip(skip)
+            .limit(limit)
         res.send(data)
     } catch (error) {
         res.status(500).json({
